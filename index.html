@@ -31,32 +31,71 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+        <h1>l.js is another simple/tiny javascript/css loader</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<h2>features</h2>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<ul>
+<li>parrallel script / css loading</li>
+<li>callback after script loading (css support callback too but are excuted imediately)</li>
+<li>tiny only 1.9ko uglifyed, 0.9ko gziped (at least for now)</li>
+<li>may load in order to preserve dependencies</li>
+<li>support aliases for simpler calling</li>
+<li>on demand loading</li>
+<li>only one script tag required</li>
+<li>clear syntax</li>
+<li>successive load of same file will load it once but execute all callbacks associated</li>
+<li>can check already inserted tags at load time</li>
+</ul><h2>examples</h2>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h3>loading ljs and another libs with one single tag</h3>
 
-<h3>Designer Templates</h3>
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
+    <span class="nx">ljs</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'myLib.js'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span> <span class="cm">/* your callback here */</span><span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<h3>loading some scripts in parrallel others in order</h3>
 
-<h3>Rather Drive Stick?</h3>
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
+    <span class="nx">ljs</span>
+        <span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'myLib.js'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'myRequiredLib.js'</span><span class="p">,</span><span class="s1">'myDependentLib.js'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span> <span class="cm">/* your callback here */</span><span class="p">})</span>
+    <span class="p">;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>second load will be executed in parrallel of first load but myDependentLib.js won't load before myRequireLib.js is laoded</p>
 
-<h3>Authors and Contributors</h3>
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
+    <span class="nx">ljs</span><span class="p">.</span><span class="nx">load</span><span class="p">([</span><span class="s1">'myLib.js'</span><span class="p">,</span><span class="s1">'myRequiredLib.js'</span><span class="p">],</span><span class="s1">'myDependentLib.js'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span> <span class="cm">/* your callback here */</span><span class="p">})</span>
+    <span class="p">;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>this will load myLib.js and myRequiredLib.js in parrallel and wait for them before loading myDependentLib.js</p>
 
-<h3>Support or Contact</h3>
+<h3>using some aliases for simpler loading</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js?checkLoaded"</span><span class="nt">&gt;</span> <span class="c1">// &lt;- adding checkLoaded to the url will check already inserted script/link tags</span>
+    <span class="nx">ljs</span>
+        <span class="p">.</span><span class="nx">addAliases</span><span class="p">({</span>
+            <span class="nx">jQuery</span><span class="o">:</span><span class="s1">'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js#jqueryId'</span> <span class="c1">// &lt;- script tag will have attribute id=jqueryId</span>
+            <span class="nx">ui</span><span class="o">:</span><span class="p">[</span>
+                <span class="s1">'jQuery'</span>
+                <span class="p">,</span><span class="s1">'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js'</span>
+                <span class="p">,</span><span class="s1">'myUITheme.css'</span>
+            <span class="p">]</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'ui'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+            <span class="cm">/* work with both jquery and jquery-ui here */</span>
+        <span class="p">})</span>
+    <span class="p">;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+<p>this piece of code is dual licenced under MIT / GPL
+Hope this help, code review, suggestions, bug reports are welcome and appreciated.</p>
       </section>
     </div>
 
