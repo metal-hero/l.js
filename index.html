@@ -31,33 +31,39 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>l.js is another simple/tiny javascript/css loader</h1>
+        <h1>
+<a name="ljs-is-another-simpletiny-javascriptcss-loader" class="anchor" href="#ljs-is-another-simpletiny-javascriptcss-loader"><span class="octicon octicon-link"></span></a>l.js is another simple/tiny javascript/css loader</h1>
 
-<h2>features</h2>
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>features</h2>
 
 <ul>
 <li>parrallel script / css loading</li>
 <li>callback after script loading (css support callback too but are excuted imediately)</li>
-<li>tiny only 1.9ko uglifyed, 0.9ko gziped (at least for now)</li>
+<li>tiny only 2ko uglifyed, 1ko gziped (at least for latest revision)</li>
 <li>may load in order to preserve dependencies</li>
 <li>support aliases for simpler calling</li>
 <li>on demand loading</li>
 <li>only one script tag required</li>
 <li>clear syntax</li>
 <li>successive load of same file will load it once but execute all callbacks associated</li>
-<li>can check already inserted tags at load time</li>
-</ul><h2>examples</h2>
+<li>can dumbly check already inserted tags at load time</li>
+<li>may use a fallback url on error (only for js files and with error events compatible browsers)</li>
+</ul><h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>examples</h2>
 
-<h3>loading ljs and another libs with one single tag</h3>
+<h3>
+<a name="loading-ljs-and-another-libs-with-one-single-tag" class="anchor" href="#loading-ljs-and-another-libs-with-one-single-tag"><span class="octicon octicon-link"></span></a>loading ljs and another libs with one single tag</h3>
 
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
     <span class="nx">ljs</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'myLib.js'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span> <span class="cm">/* your callback here */</span><span class="p">});</span>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 
-<h3>loading some scripts in parrallel others in order</h3>
+<h3>
+<a name="loading-some-scripts-in-parrallel-others-in-order" class="anchor" href="#loading-some-scripts-in-parrallel-others-in-order"><span class="octicon octicon-link"></span></a>loading some scripts in parrallel others in order</h3>
 
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
     <span class="nx">ljs</span>
         <span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'myLib.js'</span><span class="p">)</span>
         <span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'myRequiredLib.js'</span><span class="p">,</span><span class="s1">'myDependentLib.js'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span> <span class="cm">/* your callback here */</span><span class="p">})</span>
@@ -67,17 +73,17 @@
 
 <p>second load will be executed in parrallel of first load but myDependentLib.js won't load before myRequireLib.js is laoded</p>
 
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
-    <span class="nx">ljs</span><span class="p">.</span><span class="nx">load</span><span class="p">([</span><span class="s1">'myLib.js'</span><span class="p">,</span><span class="s1">'myRequiredLib.js'</span><span class="p">],</span><span class="s1">'myDependentLib.js'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span> <span class="cm">/* your callback here */</span><span class="p">})</span>
-    <span class="p">;</span>
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
+    <span class="nx">ljs</span><span class="p">.</span><span class="nx">load</span><span class="p">([</span><span class="s1">'myLib.js'</span><span class="p">,</span><span class="s1">'myRequiredLib.js'</span><span class="p">],</span><span class="s1">'myDependentLib.js'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span> <span class="cm">/* your callback here */</span><span class="p">});</span>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 
 <p>this will load myLib.js and myRequiredLib.js in parrallel and wait for them before loading myDependentLib.js</p>
 
-<h3>using some aliases for simpler loading</h3>
+<h3>
+<a name="using-some-aliases-for-simpler-loading" class="anchor" href="#using-some-aliases-for-simpler-loading"><span class="octicon octicon-link"></span></a>using some aliases for simpler loading</h3>
 
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js?checkLoaded"</span><span class="nt">&gt;</span> <span class="c1">// &lt;- adding checkLoaded to the url will check already inserted script/link tags</span>
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js?checkLoaded"</span><span class="nt">&gt;</span> <span class="c1">// &lt;- adding checkLoaded to the url will dumbly check already inserted script/link tags</span>
     <span class="nx">ljs</span>
         <span class="p">.</span><span class="nx">addAliases</span><span class="p">({</span>
             <span class="nx">jQuery</span><span class="o">:</span><span class="s1">'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js#jqueryId'</span> <span class="c1">// &lt;- script tag will have attribute id=jqueryId</span>
@@ -91,6 +97,21 @@
             <span class="cm">/* work with both jquery and jquery-ui here */</span>
         <span class="p">})</span>
     <span class="p">;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+<h3>
+<a name="define-a-fallback-url" class="anchor" href="#define-a-fallback-url"><span class="octicon octicon-link"></span></a>define a fallback url</h3>
+
+<p>l.js also support a fallback url for javascript files in case you want to try to get the resource from another location on loading failure
+You can define this fallback url parameter like you define ids. The difference is you will prefix with <strong>#=</strong> instead of # alone</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"l.js"</span><span class="nt">&gt;</span>
+    <span class="nx">ljs</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'http://domain.com/myLib.js#=/myfallback.js#myid'</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="cm">/*</span>
+<span class="cm">            generated script tag will have myid as id and will try to load /myfallback.js if it fail to load http://domain.com/myLib.js</span>
+<span class="cm">        */</span>
+    <span class="p">});</span>
 <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 
